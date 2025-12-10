@@ -9,13 +9,14 @@ import {
   arbitrum,
   base,
   anvil,
-  zksync
+  zksync,
+  sepolia
 } from 'wagmi/chains';
 
 const config = getDefaultConfig({
   appName: 'TokenSender',
   projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
-  chains: [mainnet, polygon, optimism, arbitrum, base, anvil, zksync],
+  chains: [mainnet, polygon, optimism, arbitrum, base, anvil, zksync, sepolia],
   ssr: false, // If your dApp uses server side rendering (SSR)
 });
 

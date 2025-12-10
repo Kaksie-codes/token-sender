@@ -1,5 +1,7 @@
 import Provider from "@/providers/Provider";
 import "./globals.css";
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+import '@rainbow-me/rainbowkit/styles.css';
 
 export default function RootLayout({
   children,
@@ -12,6 +14,7 @@ export default function RootLayout({
         className={`antialiased`}
       >
         <Provider>
+          <ConnectButton />
           {children}
         </Provider>
       </body>
