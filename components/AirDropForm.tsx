@@ -2,19 +2,36 @@
 import React, { useState } from 'react';
 import InputField from './InputField';
 import Button from './Button';
+import { chainsToTSender } from '@/utils/constants';
+import { useChainId, useReadContract } from 'wagmi'
+import { readContract } from '@wagmi/core'
 
 const AirDropForm = () => {
   const [tokenAddress, setTokenAddress] = useState('');
   const [recipients, setRecipients] = useState('');
   const [amounts, setAmounts] = useState('');
+  const chainId = useChainId();
+  
 
   const isFormValid = tokenAddress.trim() !== '' && recipients.trim() !== '' && amounts.trim() !== '';
+
+
+  async function getApprovedAmount(tsenderAddress: string | null):Promise<number> {
+    if(!tsenderAddress){
+        alert("Unsupported chain");
+        return 0;
+    }
+
+    // Read from the chain to see if we have approved enough token
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!isFormValid) return;
     // TODO: Handle form submission
-    console.log({ tokenAddress, recipients, amounts });
+    // console.log({ tokenAddress, recipients, amounts });
+    const tsenderAddress = chainsToTSender[chainId]["tsender"];
+    console.log({chainId, tsenderAddress});
   };
 
   return (
