@@ -2,8 +2,8 @@
 import React, { useState } from 'react';
 import InputField from './InputField';
 import Button from './Button';
-import { chainsToTSender } from '@/utils/constants';
-import { useChainId, useReadContract } from 'wagmi'
+import { chainsToTSender, tsenderAbi, erc20Abi } from '@/utils/constants';
+import { useChainId, useReadContract, useConfig, useAccount } from 'wagmi'
 import { readContract } from '@wagmi/core'
 
 const AirDropForm = () => {
@@ -11,6 +11,8 @@ const AirDropForm = () => {
   const [recipients, setRecipients] = useState('');
   const [amounts, setAmounts] = useState('');
   const chainId = useChainId();
+  const config = useConfig();
+  const account = useAccount();
   
 
   const isFormValid = tokenAddress.trim() !== '' && recipients.trim() !== '' && amounts.trim() !== '';
@@ -23,15 +25,29 @@ const AirDropForm = () => {
     }
 
     // Read from the chain to see if we have approved enough token
+    const response = await readContract(config, {
+      address: tokenAddress as `0x${string}`,
+      abi: erc20Abi,
+      functionName: 'allowance',
+      args: [account.address as `0x${string}`, tsenderAddress as `0x${string}`],
+    })
+
+    return Number(response);
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
     if (!isFormValid) return;
-    // TODO: Handle form submission
+    // TODO: Handle form submission    
+    // 1a. If already approved, move to step 2
+    // 1b. If not approved, Approve our tsender contract to send out tokens
+    //  2. Call the airdrop function on our tsender contract
+    // 3. Wait for tx to be mined and show success or failure message
     // console.log({ tokenAddress, recipients, amounts });
     const tsenderAddress = chainsToTSender[chainId]["tsender"];
     console.log({chainId, tsenderAddress});
+    const approvedAmount  = await getApprovedAmount(tsenderAddress);
+    console.log("Approved Amount: ", approvedAmount);
   };
 
   return (
