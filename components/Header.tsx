@@ -23,7 +23,11 @@ export default function Header() {
           </svg>
         </a>
         <div className="ml-2">
-          <ConnectButton />
+          <ConnectButton 
+            showBalance={true}
+            // chainStatus="icon"
+            accountStatus="address"
+          />
         </div>
       </div>
     </header>
